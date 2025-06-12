@@ -1,0 +1,178 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Sussurros da Escola</title>
+  <script type="module">
+    // Firebase SDKs
+    import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-app.js";
+    import { getDatabase, ref, push, onChildAdded } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-database.js";
+
+    // Firebase config
+    const firebaseConfig = {
+      apiKey: "AIzaSyBOcoAj6wz2gVQKUVf8B5gHd1MRKNIxv5Y",
+      authDomain: "escola-fofocas.firebaseapp.com",
+      databaseURL: "https://escola-fofocas-default-rtdb.firebaseio.com",
+      projectId: "escola-fofocas",
+      storageBucket: "escola-fofocas.firebasestorage.app",
+      messagingSenderId: "1018336069400",
+      appId: "1:1018336069400:web:2b1f4e692f51c18f40806d",
+      measurementId: "G-PLTJMKFQ6R"
+    };
+
+    const app = initializeApp(firebaseConfig);
+    const db = getDatabase(app);
+    const fofocaRef = ref(db, 'fofocas');
+
+    // Enviar fofoca
+    window.enviarFofoca = () => {
+      const autor = document.getElementById("autor").value.trim() || "Anônimo";
+      const mensagem = document.getElementById("mensagem").value.trim();
+
+      if (mensagem !== "") {
+        push(fofocaRef, {
+          autor,
+          mensagem,
+          timestamp: Date.now()
+        });
+
+        document.getElementById("form").reset();
+      }
+    };
+
+    // Receber fofocas em tempo real
+    onChildAdded(fofocaRef, (data) => {
+      const { autor, mensagem } = data.val();
+      const container = document.getElementById("fofocas");
+      const p = document.createElement("p");
+      p.innerHTML = `<strong>${autor}:</strong> ${mensagem}`;
+      container.prepend(p);
+    });
+  </script>
+
+  <style>
+    @import url('https://fonts.googleapis.com/css2?family=Roboto+Mono&display=swap');
+
+    * { box-sizing: border-box; }
+    body {
+      margin: 0;
+      background: #121212;
+      color: #eee;
+      font-family: 'Roboto Mono', monospace;
+      display: flex;
+      flex-direction: column;
+      min-height: 100vh;
+    }
+    header {
+      background: #1f1f1f;
+      padding: 2rem;
+      text-align: center;
+      border-bottom: 2px solid #bb33ff;
+      box-shadow: 0 0 10px #bb33ff33;
+    }
+    header h1 {
+      margin: 0;
+      font-size: 2.8rem;
+      letter-spacing: 0.15em;
+      color: #bb33ff;
+      text-shadow: 0 0 8px #bb33ffaa;
+    }
+    main {
+      flex: 1;
+      padding: 2rem;
+      max-width: 700px;
+      margin: 0 auto;
+      width: 100%;
+    }
+    form {
+      background: #1f1f1f;
+      padding: 1.5rem;
+      border-radius: 8px;
+      box-shadow: 0 0 15px #bb33ff33;
+      margin-bottom: 2rem;
+    }
+    form label {
+      display: block;
+      margin-bottom: 0.5rem;
+      color: #bb33ffaa;
+    }
+    form input, form textarea {
+      width: 100%;
+      padding: 0.7rem;
+      margin-bottom: 1rem;
+      border: none;
+      border-radius: 5px;
+      background: #2c2c2c;
+      color: #eee;
+      font-family: 'Roboto Mono', monospace;
+    }
+    form textarea { resize: vertical; }
+    form button {
+      background: #bb33ff;
+      border: none;
+      padding: 0.75rem 1.6rem;
+      font-weight: 700;
+      border-radius: 6px;
+      color: #121212;
+      cursor: pointer;
+    }
+    form button:hover { background: #d460ff; }
+
+    section.fofocas {
+      background: #1a1a1a;
+      padding: 1.5rem;
+      border-radius: 8px;
+      box-shadow: 0 0 20px #bb33ff44;
+      max-height: 400px;
+      overflow-y: auto;
+    }
+    section.fofocas p {
+      background: #2d2d2d;
+      padding: 0.7rem 1rem;
+      margin-bottom: 0.7rem;
+      border-radius: 5px;
+      box-shadow: inset 0 0 4px #bb33ff33;
+    }
+
+    footer {
+      background: #1f1f1f;
+      text-align: center;
+      padding: 1rem;
+      color: #bb33ffaa;
+      border-top: 2px solid #bb33ff;
+      font-style: italic;
+    }
+
+    section.fofocas::-webkit-scrollbar { width: 8px; }
+    section.fofocas::-webkit-scrollbar-thumb { background: #bb33ffaa; border-radius: 4px; }
+  </style>
+</head>
+<body>
+
+  <header>
+    <h1>Sussurros da Escola</h1>
+  </header>
+
+  <main>
+    <form id="form" onsubmit="event.preventDefault(); enviarFofoca();">
+      <label for="autor">Seu nome (ou deixe vazio para anônimo):</label>
+      <input type="text" id="autor" placeholder="Ex: João ou Anônimo" />
+
+      <label for="mensagem">Conte a fofoca:</label>
+      <textarea id="mensagem" rows="4" placeholder="O que rolou nos corredores..." required></textarea>
+
+      <button type="submit">Postar</button>
+    </form>
+
+    <section class="fofocas" id="fofocas">
+      <!-- As fofocas aparecerão aqui automaticamente -->
+    </section>
+  </main>
+
+  <footer>
+    O que se diz nos corredores, fica aqui.
+  </footer>
+
+</body>
+</html>
