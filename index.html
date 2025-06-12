@@ -1,0 +1,157 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Postar Fofoca</title>
+  <style>
+    body {
+      background: #121212;
+      color: #eee;
+      font-family: 'Nunito', sans-serif;
+      max-width: 600px;
+      margin: 0 auto;
+      padding: 2rem 1rem;
+      min-height: 100vh;
+    }
+    h1 {
+      text-align: center;
+      margin-bottom: 1.5rem;
+      font-weight: 700;
+      user-select: none;
+    }
+    form {
+      background: #222;
+      border-radius: 10px;
+      padding: 1rem 1.2rem;
+      box-shadow: 0 0 8px #333;
+    }
+    label {
+      display: block;
+      font-weight: 600;
+      margin-bottom: 0.5rem;
+    }
+    textarea {
+      width: 100%;
+      min-height: 90px;
+      background: #333;
+      border: none;
+      border-radius: 8px;
+      color: #eee;
+      padding: 0.7rem 1rem;
+      font-size: 1rem;
+      font-family: 'Nunito', sans-serif;
+      resize: vertical;
+    }
+    input[type="file"] {
+      margin-top: 10px;
+      color: #eee;
+      background: #333;
+      border-radius: 6px;
+      padding: 5px;
+    }
+    button {
+      width: 100%;
+      margin-top: 1rem;
+      background: #ff4d4d;
+      border: none;
+      padding: 12px;
+      border-radius: 8px;
+      color: white;
+      font-weight: 700;
+      font-size: 1.1rem;
+      cursor: pointer;
+      transition: background 0.3s;
+    }
+    button:hover {
+      background: #e03e3e;
+    }
+    p.link {
+      margin-top: 1rem;
+      text-align: center;
+      user-select: none;
+    }
+    p.link a {
+      color: #ff4d4d;
+      text-decoration: none;
+      font-weight: 700;
+    }
+  </style>
+</head>
+<body>
+
+  <h1>Poste Sua Fofoca Anônima</h1>
+
+  <form id="formFofoca">
+    <label for="fofocaText">Fofoca</label>
+    <textarea id="fofocaText" placeholder="Conte o que tá rolando..." required></textarea>
+
+    <label for="fofocaImg">Enviar uma imagem? (opcional)</label>
+    <input type="file" id="fofocaImg" accept="image/*" />
+
+    <button type="submit">Postar</button>
+  </form>
+
+  <p class="link">Quer ver as fofocas? <a href="feed.html">Clique aqui</a></p>
+
+  <!-- Firebase SDKs -->
+  <script src="https://www.gstatic.com/firebasejs/9.22.2/firebase-app-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/9.22.2/firebase-database-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/9.22.2/firebase-storage-compat.js"></script>
+
+  <script>
+    const firebaseConfig = {
+      apiKey: "AIzaSyBOcoAj6wz2gVQKUVf8B5gHd1MRKNIxv5Y",
+      authDomain: "escola-fofocas.firebaseapp.com",
+      databaseURL: "https://escola-fofocas-default-rtdb.firebaseio.com",
+      projectId: "escola-fofocas",
+      storageBucket: "escola-fofocas.appspot.com",
+      messagingSenderId: "1018336069400",
+      appId: "1:1018336069400:web:ab856ef8107c318140806d",
+      measurementId: "G-C69CXRXVLK"
+    };
+    firebase.initializeApp(firebaseConfig);
+
+    const db = firebase.database();
+    const storage = firebase.storage();
+
+    const form = document.getElementById('formFofoca');
+    const fofocaText = document.getElementById('fofocaText');
+    const fofocaImg = document.getElementById('fofocaImg');
+
+    form.addEventListener('submit', async (e) => {
+      e.preventDefault();
+      const texto = fofocaText.value.trim();
+      if (!texto) {
+        alert('Escreve a fofoca antes de enviar.');
+        return;
+      }
+      const arquivoImg = fofocaImg.files[0];
+      const novaChave = db.ref().child('fofocas').push().key;
+
+      let imgUrl = null;
+      if (arquivoImg) {
+        const storageRef = storage.ref();
+        const imgRef = storageRef.child('images/' + novaChave + '-' + arquivoImg.name);
+        try {
+          await imgRef.put(arquivoImg);
+          imgUrl = await imgRef.getDownloadURL();
+        } catch (erro) {
+          alert('Erro ao enviar a imagem.');
+          return;
+        }
+      }
+
+      db.ref('fofocas/' + novaChave).set({
+        text: texto,
+        imgUrl: imgUrl || null,
+        timestamp: Date.now()
+      });
+
+      form.reset();
+      alert('Fofoca postada! Agora vá ver as outras.');
+    });
+  </script>
+
+</body>
+</html>
