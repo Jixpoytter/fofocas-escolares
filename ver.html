@@ -37,4 +37,99 @@
     .timestamp {
       font-size: 0.7rem;
       color: #ff444488;
-      margin-top: 0.
+      margin-top: 0.6rem;
+      text-align: right;
+      font-style: italic;
+    }
+    .voltar {
+      display: block;
+      margin: 2rem auto 0 auto;
+      text-align: center;
+      color: #bb33ffcc;
+      text-decoration: none;
+      font-size: 0.9rem;
+      user-select: none;
+      width: fit-content;
+    }
+    .voltar:hover {
+      text-decoration: underline;
+    }
+  </style>
+</head>
+<body>
+
+  <h1>Fofocas Recentes</h1>
+  <div id="listaFofocas">Carregando fofocas...</div>
+
+  <a href="index.html" class="voltar">&larr; Voltar para Home</a>
+
+  <!-- Firebase Compat SDKs -->
+  <script src="https://www.gstatic.com/firebasejs/9.22.2/firebase-app-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/9.22.2/firebase-database-compat.js"></script>
+
+  <script>
+    // Config Firebase do seu projeto
+    const firebaseConfig = {
+      apiKey: "AIzaSyBOcoAj6wz2gVQKUVf8B5gHd1MRKNIxv5Y",
+      authDomain: "escola-fofocas.firebaseapp.com",
+      databaseURL: "https://escola-fofocas-default-rtdb.firebaseio.com",
+      projectId: "escola-fofocas",
+      storageBucket: "escola-fofocas.firebasestorage.app",
+      messagingSenderId: "1018336069400",
+      appId: "1:1018336069400:web:ab856ef8107c318140806d",
+      measurementId: "G-C69CXRXVLK"
+    };
+
+    // Inicializa Firebase
+    firebase.initializeApp(firebaseConfig);
+    const database = firebase.database();
+
+    const listaFofocas = document.getElementById('listaFofocas');
+
+    // Função pra formatar timestamp em data legível
+    function formatarData(ts) {
+      const d = new Date(ts);
+      return d.toLocaleString('pt-BR', {
+        day: '2-digit', month: '2-digit', year: 'numeric',
+        hour: '2-digit', minute: '2-digit'
+      });
+    }
+
+    // Lê as fofocas em tempo real e atualiza a lista
+    database.ref('fofocas').orderByChild('timestamp').limitToLast(50).on('value', (snapshot) => {
+      const dados = snapshot.val();
+      if (!dados) {
+        listaFofocas.innerHTML = '<p>Nenhuma fofoca por enquanto.</p>';
+        return;
+      }
+      // Limpa a lista
+      listaFofocas.innerHTML = '';
+
+      // Dados vem como objeto {id: {...}, id2: {...}, ...}
+      // Ordenar por timestamp crescente
+      const entradas = Object.entries(dados);
+      entradas.sort((a,b) => a[1].timestamp - b[1].timestamp);
+
+      // Criar os cards na tela
+      entradas.forEach(([id, fofoca]) => {
+        const div = document.createElement('div');
+        div.classList.add('fofoca');
+
+        // Mensagem
+        const msg = document.createElement('div');
+        msg.textContent = fofoca.mensagem;
+        div.appendChild(msg);
+
+        // Timestamp
+        const data = document.createElement('div');
+        data.classList.add('timestamp');
+        data.textContent = formatarData(fofoca.timestamp);
+        div.appendChild(data);
+
+        listaFofocas.appendChild(div);
+      });
+    });
+  </script>
+
+</body>
+</html>
