@@ -1,63 +1,77 @@
 <!DOCTYPE html>
 <html lang="pt-BR">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <title>Fofocas da Escola - Home</title>
-  <style>
-    @import url('https://fonts.googleapis.com/css2?family=Roboto+Mono&display=swap');
-    body {
-      background: #121212;
-      color: #eee;
-      font-family: 'Roboto Mono', monospace;
-      display: flex;
-      flex-direction: column;
-      justify-content: center;
-      align-items: center;
-      height: 100vh;
-      margin: 0;
-      text-align: center;
-      padding: 20px;
-    }
-    h1 {
-      font-size: 2.5rem;
-      margin-bottom: 2rem;
-      color: #bb33ff;
-      text-shadow: 0 0 10px #bb33ff88;
-    }
-    .btn {
-      display: inline-block;
-      background: #bb2222;
-      color: #fff;
-      padding: 1rem 2rem;
-      margin: 1rem;
-      border-radius: 8px;
-      text-decoration: none;
-      font-weight: 700;
-      font-size: 1.2rem;
-      box-shadow: 0 0 10px #bb222288;
-      transition: background 0.3s ease;
-      user-select: none;
-    }
-    .btn:hover {
-      background: #ff4444;
-      box-shadow: 0 0 15px #ff444488;
-    }
-    footer {
-      position: fixed;
-      bottom: 10px;
-      font-size: 0.85rem;
-      color: #bb33ff88;
-      font-style: italic;
-      user-select: none;
-    }
-  </style>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>Fofocas da Escola - Home</title>
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=Roboto+Mono&display=swap');
+  body {
+    background: #121212;
+    color: #eee;
+    font-family: 'Roboto Mono', monospace;
+    margin: 0;
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    padding: 2rem;
+  }
+  main {
+    background: #1f1f1f;
+    border-radius: 15px;
+    padding: 3rem 2rem;
+    max-width: 400px;
+    width: 100%;
+    box-shadow: 0 0 20px #bb33ffcc;
+    text-align: center;
+    user-select: none;
+  }
+  h1 {
+    font-size: 2.8rem;
+    color: #bb33ff;
+    margin-bottom: 2rem;
+    text-shadow: 0 0 10px #bb33ffcc;
+  }
+  .btn {
+    display: inline-block;
+    margin: 1rem 1.2rem;
+    padding: 0.9rem 2.5rem;
+    background-color: #ff3b3b;
+    color: white;
+    font-weight: 700;
+    font-size: 1.15rem;
+    border: none;
+    border-radius: 9999px;
+    cursor: pointer;
+    text-decoration: none;
+    box-shadow: 0 4px 15px #ff3b3b88;
+    transition: background-color 0.3s ease, transform 0.2s ease;
+  }
+  .btn:hover, .btn:focus {
+    background-color: #e03131;
+    transform: translateY(-4px);
+    outline: none;
+    box-shadow: 0 6px 20px #e03131cc;
+  }
+  footer {
+    margin-top: auto;
+    padding: 1.2rem 0;
+    width: 100%;
+    text-align: center;
+    font-size: 0.9rem;
+    color: #555;
+    user-select: none;
+  }
+</style>
 </head>
 <body>
-  <h1>Fofocas da Escola</h1>
-  <a href="postar.html" class="btn">Postar Fofoca</a>
-  <a href="ver.html" class="btn">Ver Fofocas</a>
-
+  <main>
+    <h1>Fofocas da Escola</h1>
+    <a href="postar.html" class="btn" aria-label="Página para postar fofocas">Postar Fofoca</a>
+    <a href="ver.html" class="btn" aria-label="Página para ver as fofocas">Ver Fofocas</a>
+  </main>
   <footer>EREM SEVERINO CORDEIRO</footer>
 </body>
 </html>
