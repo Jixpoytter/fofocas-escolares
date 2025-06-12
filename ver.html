@@ -1,90 +1,46 @@
 <!DOCTYPE html>
 <html lang="pt-BR">
 <head>
-<meta charset="UTF-8" />
-<meta name="viewport" content="width=device-width, initial-scale=1" />
-<title>Ver Fofocas - Fofocas da Escola</title>
-<style>
-  @import url('https://fonts.googleapis.com/css2?family=Roboto+Mono&display=swap');
-  body {
-    background: #121212;
-    color: #eee;
-    font-family: 'Roboto Mono', monospace;
-    margin: 0;
-    min-height: 100vh;
-    padding: 2rem 1rem;
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-  }
-  h1 {
-    color: #bb33ff;
-    margin-bottom: 2rem;
-    font-size: 2.6rem;
-    text-shadow: 0 0 12px #bb33ffcc;
-    user-select: none;
-  }
-  #lista {
-    max-width: 600px;
-    width: 100%;
-    display: flex;
-    flex-direction: column;
-    gap: 1rem;
-    overflow-y: auto;
-    max-height: 70vh;
-    padding-right: 8px;
-  }
-  .card {
-    background: #1f1f1f;
-    border-radius: 12px;
-    padding: 1rem 1.5rem;
-    box-shadow: 0 0 20px #bb33ff88;
-    position: relative;
-    transition: transform 0.2s ease;
-  }
-  .card:hover {
-    transform: translateY(-6px);
-  }
-  .nome {
-    font-weight: 700;
-    color: #ff3b3b;
-    font-size: 1.15rem;
-    user-select: text;
-  }
-  .mensagem {
-    margin-top: 0.4rem;
-    font-size: 1.1rem;
-    user-select: text;
-    line-height: 1.4;
-  }
-  .data {
-    font-size: 0.75rem;
-    color: #999;
-    position: absolute;
-    top: 12px;
-    right: 18px;
-    user-select: none;
-    font-style: italic;
-  }
-  #loading {
-    font-size: 1.1rem;
-    color: #bbb;
-    text-align: center;
-    margin-top: 1rem;
-    user-select: none;
-  }
-</style>
+  <meta charset="UTF-8">
+  <title>Ver Fofocas</title>
+  <style>
+    body {
+      background: #0d0d0d;
+      color: #fff;
+      font-family: 'Courier New', monospace;
+      padding: 20px;
+    }
+    h1 {
+      text-align: center;
+      margin-bottom: 30px;
+    }
+    .fofoca {
+      background: #1a1a1a;
+      margin: 15px auto;
+      padding: 15px;
+      border-left: 5px solid #d00000;
+      border-radius: 8px;
+      max-width: 600px;
+    }
+    .nome {
+      color: #ff4c4c;
+      font-weight: bold;
+    }
+    .data {
+      font-size: 0.8em;
+      color: #aaa;
+    }
+  </style>
 </head>
 <body>
-  <h1>Fofocas Recentes</h1>
-  <div id="lista">
-    <div id="loading">Carregando fofocas...</div>
-  </div>
+  <h1>Fofocas Publicadas</h1>
+  <div id="fofocas"></div>
 
-  <script type="module">
-    import { initializeApp } from "https://www.gstatic.com/firebasejs/10.1.0/firebase-app.js";
-    import { getDatabase, ref, query, orderByChild, onValue } from "https://www.gstatic.com/firebasejs/10.1.0/firebase-database.js";
+  <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-app-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-analytics-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-database-compat.js"></script>
 
+  <script>
     const firebaseConfig = {
       apiKey: "AIzaSyBOcoAj6wz2gVQKUVf8B5gHd1MRKNIxv5Y",
       authDomain: "escola-fofocas.firebaseapp.com",
@@ -96,12 +52,28 @@
       measurementId: "G-C69CXRXVLK"
     };
 
-    const app = initializeApp(firebaseConfig);
-    const db = getDatabase(app);
-    const lista = document.getElementById('lista');
-    const loading = document.getElementById('loading');
+    const app = firebase.initializeApp(firebaseConfig);
+    firebase.analytics();
+    const db = firebase.database();
 
-    // Formata timestamp para data legível pt-BR
-    function formatarData(ts) {
-      if (!ts) return '';
-      const d = new Date(ts
+    const container = document.getElementById("fofocas");
+
+    db.ref("fofocas").on("value", (snapshot) => {
+      container.innerHTML = "";
+      const data = snapshot.val();
+      if (!data) return container.innerHTML = "<p>Nenhuma fofoca publicada ainda.</p>";
+
+      const fofocas = Object.values(data).reverse();
+      fofocas.forEach((f) => {
+        container.innerHTML += `
+          <div class="fofoca">
+            <div class="nome">${f.nome}</div>
+            <div>${f.mensagem}</div>
+            <div class="data">${f.data}</div>
+          </div>
+        `;
+      });
+    });
+  </script>
+</body>
+</html>
