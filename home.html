@@ -1,0 +1,84 @@
+<!DOCTYPE html>
+<html lang="pt-BR" >
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Escola de Fofocas - Home</title>
+  <style>
+    @import url('https://fonts.googleapis.com/css2?family=Share+Tech+Mono&display=swap');
+    body {
+      margin: 0; padding: 0;
+      background: #121212 url('https://www.transparenttextures.com/patterns/asfalt-light.png') repeat;
+      color: #eee;
+      font-family: 'Share Tech Mono', monospace;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      align-items: center;
+      height: 100vh;
+      text-align: center;
+      user-select: none;
+    }
+    h1 {
+      font-size: 3rem;
+      color: #ff3333;
+      text-shadow: 0 0 15px #ff2222;
+      margin-bottom: 3rem;
+    }
+    .btn-container {
+      display: flex;
+      gap: 3rem;
+      flex-wrap: wrap;
+      justify-content: center;
+      width: 100%;
+      max-width: 450px;
+    }
+    a.button {
+      flex: 1 1 180px;
+      background-color: #330000;
+      border: 2px solid #ff3333;
+      color: #ff4444;
+      font-weight: 700;
+      font-size: 1.3rem;
+      padding: 1.2rem 2rem;
+      border-radius: 12px;
+      text-decoration: none;
+      text-transform: uppercase;
+      box-shadow: 0 0 12px #ff4444;
+      transition:
+        background-color 0.3s ease,
+        color 0.3s ease,
+        box-shadow 0.3s ease,
+        transform 0.2s ease;
+      cursor: pointer;
+      user-select: none;
+    }
+    a.button:hover,
+    a.button:focus {
+      background-color: #ff2222;
+      color: #fff;
+      box-shadow: 0 0 18px #ff5555, 0 0 20px #ff1111;
+      transform: scale(1.1);
+      outline: none;
+    }
+    footer {
+      position: absolute;
+      bottom: 1rem;
+      color: #ff2222aa;
+      font-size: 0.85rem;
+      font-style: italic;
+      font-family: monospace;
+      user-select: none;
+    }
+  </style>
+</head>
+<body>
+  <h1>🕵️‍♂️ Escola de Fofocas 🕵️‍♀️</h1>
+  <div class="btn-container">
+    <a href="postar.html" class="button" aria-label="Postar uma fofoca">Postar Fofoca</a>
+    <a href="ver.html" class="button" aria-label="Ver as fofocas">Ver Fofocas</a>
+  </div>
+
+  <footer>Estilo Elliot — Escuro, simples e direto</footer>
+</body>
+</html>
