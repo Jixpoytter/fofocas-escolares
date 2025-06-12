@@ -1,102 +1,113 @@
 <!DOCTYPE html>
 <html lang="pt-BR">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <title>Postar Fofoca - Fofocas da Escola</title>
-  <style>
-    @import url('https://fonts.googleapis.com/css2?family=Roboto+Mono&display=swap');
-    body {
-      background: #121212;
-      color: #eee;
-      font-family: 'Roboto Mono', monospace;
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      padding: 2rem 1rem;
-      min-height: 100vh;
-      margin: 0;
-    }
-    h1 {
-      color: #bb33ff;
-      text-shadow: 0 0 8px #bb33ffcc;
-      margin-bottom: 2rem;
-    }
-    form {
-      background: #1f1f1f;
-      padding: 1.5rem;
-      border-radius: 12px;
-      width: 100%;
-      max-width: 500px;
-      box-shadow: 0 0 15px #bb33ff88;
-    }
-    label {
-      display: block;
-      font-weight: 600;
-      margin-bottom: 0.5rem;
-      color: #ff4444cc;
-    }
-    textarea {
-      width: 100%;
-      padding: 1rem;
-      font-family: 'Roboto Mono', monospace;
-      font-size: 1rem;
-      border-radius: 8px;
-      border: none;
-      background: #2a2a2a;
-      color: #eee;
-      resize: vertical;
-      min-height: 120px;
-      box-sizing: border-box;
-    }
-    button {
-      margin-top: 1.5rem;
-      background: #bb2222;
-      border: none;
-      color: white;
-      font-weight: 700;
-      padding: 1rem 2rem;
-      border-radius: 8px;
-      cursor: pointer;
-      font-size: 1.1rem;
-      box-shadow: 0 0 10px #bb2222aa;
-      transition: background 0.3s ease;
-      user-select: none;
-    }
-    button:hover {
-      background: #ff4444;
-      box-shadow: 0 0 15px #ff444488;
-    }
-    .voltar {
-      margin-top: 2rem;
-      color: #bb33ffcc;
-      text-decoration: none;
-      font-size: 0.9rem;
-      user-select: none;
-      display: inline-block;
-    }
-    .voltar:hover {
-      text-decoration: underline;
-    }
-  </style>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>Postar Fofoca - Fofocas da Escola</title>
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=Roboto+Mono&display=swap');
+  body {
+    background: #121212;
+    color: #eee;
+    font-family: 'Roboto Mono', monospace;
+    margin: 0;
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    padding: 2rem 1rem;
+  }
+  main {
+    background: #1f1f1f;
+    border-radius: 15px;
+    padding: 2.5rem 2rem;
+    max-width: 450px;
+    width: 100%;
+    box-shadow: 0 0 25px #bb33ffcc;
+    user-select: none;
+  }
+  h1 {
+    color: #bb33ff;
+    margin-bottom: 2rem;
+    font-size: 2.4rem;
+    text-shadow: 0 0 12px #bb33ffcc;
+    text-align: center;
+  }
+  label {
+    display: block;
+    margin-bottom: 0.4rem;
+    font-weight: 600;
+    font-size: 1rem;
+  }
+  input[type="text"], textarea {
+    width: 100%;
+    background: #121212;
+    border: 2px solid #ff3b3b;
+    border-radius: 10px;
+    padding: 0.7rem 1rem;
+    font-size: 1rem;
+    color: #eee;
+    resize: vertical;
+    transition: border-color 0.3s ease;
+  }
+  input[type="text"]:focus, textarea:focus {
+    border-color: #e03131;
+    outline: none;
+  }
+  textarea {
+    min-height: 120px;
+  }
+  button {
+    margin-top: 1.8rem;
+    background-color: #ff3b3b;
+    border: none;
+    border-radius: 9999px;
+    padding: 1rem 3rem;
+    color: white;
+    font-weight: 700;
+    font-size: 1.2rem;
+    cursor: pointer;
+    box-shadow: 0 6px 20px #ff3b3baa;
+    transition: background-color 0.3s ease, transform 0.2s ease;
+    display: block;
+    width: 100%;
+  }
+  button:hover, button:focus {
+    background-color: #e03131;
+    transform: translateY(-4px);
+    outline: none;
+    box-shadow: 0 8px 25px #e03131cc;
+  }
+  .msg {
+    margin-top: 1.5rem;
+    font-size: 1rem;
+    color: #4aff7b;
+    font-weight: 600;
+    text-align: center;
+    user-select: none;
+  }
+  .error {
+    color: #ff6666;
+  }
+</style>
 </head>
 <body>
+  <main>
+    <h1>Postar uma Fofoca</h1>
+    <form id="fofocaForm">
+      <label for="nome">Seu Nome (opcional)</label>
+      <input type="text" id="nome" placeholder="Quem tá contando?" maxlength="30" />
+      <label for="mensagem">Fofoca</label>
+      <textarea id="mensagem" placeholder="Escreva sua fofoca aqui..." required maxlength="300"></textarea>
+      <button type="submit">Publicar</button>
+    </form>
+    <div class="msg" id="feedback"></div>
+  </main>
 
-  <h1>Poste sua fofoca anonimamente</h1>
+  <script type="module">
+    import { initializeApp } from "https://www.gstatic.com/firebasejs/10.1.0/firebase-app.js";
+    import { getDatabase, ref, push, serverTimestamp } from "https://www.gstatic.com/firebasejs/10.1.0/firebase-database.js";
 
-  <form id="formFofoca">
-    <label for="mensagem">Fofoca</label>
-    <textarea id="mensagem" placeholder="Conte aqui a fofoca..." required></textarea>
-    <button type="submit">Enviar Fofoca</button>
-  </form>
-
-  <a href="index.html" class="voltar">&larr; Voltar para Home</a>
-
-  <script src="https://www.gstatic.com/firebasejs/9.22.2/firebase-app-compat.js"></script>
-  <script src="https://www.gstatic.com/firebasejs/9.22.2/firebase-database-compat.js"></script>
-
-  <script>
-    // Config Firebase do seu projeto
     const firebaseConfig = {
       apiKey: "AIzaSyBOcoAj6wz2gVQKUVf8B5gHd1MRKNIxv5Y",
       authDomain: "escola-fofocas.firebaseapp.com",
@@ -107,32 +118,39 @@
       appId: "1:1018336069400:web:ab856ef8107c318140806d",
       measurementId: "G-C69CXRXVLK"
     };
-    // Inicializa Firebase
-    firebase.initializeApp(firebaseConfig);
-    const database = firebase.database();
 
-    // Seleciona o form
-    const form = document.getElementById('formFofoca');
+    const app = initializeApp(firebaseConfig);
+    const db = getDatabase(app);
+
+    const form = document.getElementById('fofocaForm');
+    const feedback = document.getElementById('feedback');
+
     form.addEventListener('submit', (e) => {
       e.preventDefault();
+      const nome = document.getElementById('nome').value.trim() || "Anon";
       const mensagem = document.getElementById('mensagem').value.trim();
-      if (mensagem.length === 0) {
-        alert('Escreva algo para enviar a fofoca!');
+
+      if(mensagem.length < 3){
+        feedback.textContent = "A fofoca precisa ter pelo menos 3 caracteres!";
+        feedback.className = "msg error";
         return;
       }
-      // Envia pro Firebase Realtime Database
-      database.ref('fofocas').push({
+
+      // Enviar para Firebase Realtime Database
+      const fofocasRef = ref(db, 'fofocas');
+      push(fofocasRef, {
+        nome,
         mensagem,
-        timestamp: Date.now()
+        timestamp: serverTimestamp()
       }).then(() => {
-        alert('Fofoca enviada com sucesso! 🤫');
+        feedback.textContent = "Fofoca publicada com sucesso!";
+        feedback.className = "msg";
         form.reset();
-      }).catch((error) => {
-        alert('Erro ao enviar a fofoca. Tente novamente.');
-        console.error(error);
+      }).catch((err) => {
+        feedback.textContent = "Erro ao publicar: " + err.message;
+        feedback.className = "msg error";
       });
     });
   </script>
-
 </body>
 </html>
